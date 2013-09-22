@@ -14,6 +14,16 @@ namespace Auction.mod
             return isBeyondPriceRange(a) || isFilteredByCardFilter (a) || isIgnoredSellerName (a);
         }
 
+        #region RarityFilter
+        //TODO
+        #endregion
+        #region ResourceFilter
+        //TODO
+        #endregion
+        #region AmountFilter
+        //TODO
+        #endregion
+
         #region PriceFilter
         int priceUpperBound = -1;
         int priceLowerBound = -1;
