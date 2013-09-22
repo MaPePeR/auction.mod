@@ -63,6 +63,7 @@
     <Compile Include="Settings.cs" />
     <Compile Include="SettingsUI.cs" />
     <Compile Include="AuctionMod.cs" />
+    <Compile Include="Auction.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
