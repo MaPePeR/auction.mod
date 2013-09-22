@@ -38,7 +38,7 @@ namespace Auction.mod
     }
 
 
-    public class Auction : BaseMod, ICommListener
+    public class AuctionMod : BaseMod, ICommListener
     {
 #if DEBUG
 		private bool hideNetworkMessages = false; //  false = testmodus
@@ -230,7 +230,7 @@ namespace Auction.mod
             return; // don't care
         }
 
-        public Auction()
+        public AuctionMod()
         {
             helpf = new Helpfunktions();
             helpf.setskins((GUISkin)Resources.Load("_GUISkins/CardListPopup"), (GUISkin)Resources.Load("_GUISkins/CardListPopupGradient"), (GUISkin)Resources.Load("_GUISkins/CardListPopupBigLabel"), (GUISkin)Resources.Load("_GUISkins/CardListPopupLeftButton"));
