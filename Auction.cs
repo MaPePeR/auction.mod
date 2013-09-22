@@ -32,6 +32,33 @@ namespace Auction.mod
             this.price = price;
             this.amountOffered = amountOffered;
         }
+
+        public static int CompareCardName(Auction a1, Auction a2) {
+            return a1.card.getName ().CompareTo (a2.card.getName ());
+        }
+        public static int CompareSellerName(Auction a1, Auction a2) {
+            return a1.seller.CompareTo (a2.seller);
+        }
+        public static int CompareTime(Auction a1, Auction a2) {
+            return -a1.time.CompareTo (a2.time); //We want the most recent on the top.
+        }
+        public static int ComparePrice(Auction a1, Auction a2) {
+            return a1.price.CompareTo (a2.price);
+        }
+        public static Comparison<Auction> getComparison(AuctionHouse.SortMode mode) {
+            switch(mode) {
+            case AuctionHouse.SortMode.CARD:
+                return CompareCardName;
+            case AuctionHouse.SortMode.PRICE:
+                return ComparePrice;
+            case AuctionHouse.SortMode.SELLER:
+                return CompareSellerName;
+            case AuctionHouse.SortMode.TIME:
+                return CompareTime;
+            default:
+                throw new ArgumentException ();
+            }
+        }
     }
 }
 
