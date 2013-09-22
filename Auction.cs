@@ -31,7 +31,6 @@ namespace Auction.mod
             this.card = card;
             this.price = price;
             this.amountOffered = amountOffered;
-
         }
     }
 }

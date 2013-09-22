@@ -64,6 +64,8 @@
     <Compile Include="SettingsUI.cs" />
     <Compile Include="AuctionMod.cs" />
     <Compile Include="Auction.cs" />
+    <Compile Include="AuctionHouse.cs" />
+    <Compile Include="AuctionFilter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
