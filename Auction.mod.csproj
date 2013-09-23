@@ -45,6 +45,9 @@
     <Reference Include="ScrollsModLoader.Interfaces">
       <HintPath>..\ScrollsModLoader.Interfaces.dll</HintPath>
     </Reference>
+    <Reference Include="nunit.framework, Version=2.6.0.12051, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AucItemFilter.cs" />
@@ -68,6 +71,7 @@
     <Compile Include="AuctionFilter.cs" />
     <Compile Include="SpamFilter.cs" />
     <Compile Include="AuctionEqualityComparer.cs" />
+    <Compile Include="SpamFilterTestCase.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
