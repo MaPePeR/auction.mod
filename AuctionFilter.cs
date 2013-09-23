@@ -4,14 +4,16 @@ namespace Auction.mod
 {
     public class AuctionFilter
     {
-        public AuctionFilter ()
+        public readonly SpamFilter spamFilter;
+        public AuctionFilter (SpamFilter spamFilter)
         {
             filtersChanged = false;
+            this.spamFilter = spamFilter;
         }
         public bool filtersChanged { get; private set;}
 
         public bool isFiltered(Auction a) {
-            return isBeyondPriceRange(a) || isFilteredByCardFilter (a) || isIgnoredSellerName (a);
+            return isBeyondPriceRange(a) || isFilteredByCardFilter (a) || isIgnoredSellerName (a) || spamFilter.isFilteredBySpamFilter(a);
         }
 
         #region RarityFilter

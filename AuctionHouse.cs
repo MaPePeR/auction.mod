@@ -20,10 +20,13 @@ namespace Auction.mod
         }
         #endregion
         private AuctionHouse () {
+            sellOfferFilter = new AuctionFilter (spamFilter);
+            buyOfferFilter = new AuctionFilter (spamFilter);
         }
 
-        public readonly AuctionFilter sellOfferFilter = new AuctionFilter();
-        public readonly AuctionFilter buyOfferFilter = new AuctionFilter();
+        public readonly SpamFilter spamFilter = new SpamFilter();
+        public readonly AuctionFilter sellOfferFilter;
+        public readonly AuctionFilter buyOfferFilter;
         //protected List<Auction> fullList = new List<Auction>();
         protected List<Auction> fullSellOfferList = new List<Auction>();
         protected List<Auction> fullBuyOfferList = new List<Auction>();
@@ -60,6 +63,7 @@ namespace Auction.mod
         }
 
         private void addAuction(Auction a) {
+            spamFilter.addAuction (a);
             //fullList.Add (a);
             if (a.offer == Auction.OfferType.BUY) {
                 fullBuyOfferList.Add (a);
