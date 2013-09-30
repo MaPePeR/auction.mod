@@ -13,11 +13,7 @@ namespace Auction.mod
 
 
 
-        AuctionHouse ah;
         Helpfunktions helpf;
-        //Listfilters lstfltrs;
-        //Auclists alist;
-        Settings sttngs;
         private Regex priceregex=new Regex(@".*[^x0-9]+[0-9]{2,9}[g]?[^x0-9]+.*");
         private Regex priceregexpriceonname = new Regex(@"[^x0-9]{2,}[0-9]{2,9}[g]?[^x0-9]+.*");
         Regex numberregx = new Regex(@"[0-9]{2,9}");
@@ -44,8 +40,6 @@ namespace Auction.mod
         private Messageparser()
         {
             this.helpf = Helpfunktions.Instance;
-            this.ah = AuctionHouse.Instance;
-            this.sttngs=Settings.Instance;
         }
 
 
