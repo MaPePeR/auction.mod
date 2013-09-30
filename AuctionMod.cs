@@ -502,7 +502,7 @@ namespace Auction.mod
                 RoomChatMessageMessage msg = (RoomChatMessageMessage)info.arguments[0];
                 if (msg.from != "Scrolls")
                 {
-                    mssgprsr.getaucitemsformmsg(msg.text, msg.from, msg.roomName);
+                    AuctionHouse.Instance.addAuctions (mssgprsr.GetAuctionsFromMessage (msg.text, msg.from, msg.roomName));
                 }
             }
 

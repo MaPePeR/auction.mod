@@ -85,7 +85,7 @@ namespace Auction.mod
 
         }*/
 
-        private void GetAuctionsFromShortIntoList(string shortList, string from, Auction.OfferType offerType, List<Auction> outList) {
+        private static void GetAuctionsFromShortIntoList(string shortList, string from, Auction.OfferType offerType, List<Auction> outList) {
             string[] words = shortList.Split(';');
             for (int i = 0; i < words.Length; i++)
             {
@@ -116,7 +116,7 @@ namespace Auction.mod
 
             }
         }
-        private List<Auction> GetAuctionsFromShortMessage(string msg, string from, string room)
+        public static List<Auction> GetAuctionsFromShortMessage(string msg, string from)
         {
 
             List<Auction> addingcards = new List<Auction>();
@@ -149,21 +149,20 @@ namespace Auction.mod
             return addingcards;
         }
 
-        public void getaucitemsformmsg(string msgg, string from, string room)
+        public List<Auction> GetAuctionsFromMessage(string msgg, string from, string room)
         {
             string msg = Regex.Replace(msgg, @"(<color=#[A-Za-z0-9]{0,6}>)|(</color>)", String.Empty);
-            this.addingcards.Clear();
             // todo: delete old msgs from author
-            if (msg.StartsWith("aucs ") || msg.StartsWith("aucb ")) { getaucitemsformshortmsg(msg, from, room); return; }
+            if (msg.StartsWith("aucs ") || msg.StartsWith("aucb ")) { return GetAuctionsFromShortMessage (msg, from); }
             //if (msg.StartsWith("aucc ")) { respondtocommand(msg,from); return; }
-            bool wts = true; ;
+            Auction.OfferType currentOfferType = Auction.OfferType.BUY; //Will be overwritten 
             //string[] words=msg.Split(' ');
-
+            List<Auction> addingAuctions = new List<Auction>();
             char[] delimiters = new char[] { '\r', '\n', ' ', ',', ';' };
             string[] words = msg.Split(delimiters, StringSplitOptions.RemoveEmptyEntries);
             //words = Regex.Split(msg, @"");
 
-            if (!msg.ToLower().Contains("wts") && !msg.ToLower().Contains("wtb") && !msg.ToLower().Contains("sell") && !msg.ToLower().Contains("buy")) return;
+            if (!msg.ToLower().Contains("wts") && !msg.ToLower().Contains("wtb") && !msg.ToLower().Contains("sell") && !msg.ToLower().Contains("buy")) return addingAuctions;
             bool wtxfound = false;
 
             for (int i = 0; i < words.Length; i++)
@@ -171,8 +170,8 @@ namespace Auction.mod
                 Card c; int price = 0;
                 string word = words[i].ToLower();
                 // save in wts or wtb?
-                if (word.Contains("wts") || word.Contains("sell")) { wts = true; wtxfound = true; }
-                if (word.Contains("wtb") || word.Contains("buy")) { wts = false; wtxfound = true; }
+                if (word.Contains("wts") || word.Contains("sell")) {currentOfferType = Auction.OfferType.BUY; wtxfound = true; }; 
+                if (word.Contains("wtb") || word.Contains("buy")) { currentOfferType = Auction.OfferType.SELL; wtxfound = true; };
                 if (!wtxfound) continue;// if no wts or wtb was found, skip card search
                 //int arrindex = Array.FindIndex(this.cardnames, element => word.Contains(element.Split(' ')[0])); // changed words[i] and element!
                 int arrindex = this.searchscrollsnicks.FindIndex(element => word.Contains(element.nick.Split(' ')[0]));
@@ -235,24 +234,19 @@ namespace Auction.mod
                                 price = Convert.ToInt32(this.numberregx.Match(tmpgold).Value);
                             }
                         }
-                        additemtolist(c, from, price, wts, msgg);
+                        addingAuctions.Add (new Auction (from, DateTime.Now, currentOfferType, c, msgg));
+                        //additemtolist(c, from, price, wts, msgg);
                         i--;
 
 
                     }//if (find) ende
-
-
-
                 }
 
 
 
 
             }
-
-            //finished, add cards to auctionHouse
-            ah.addAuctions(this.addingcards);
-
+            return addingAuctions;
         }
 
         
