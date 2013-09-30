@@ -9,7 +9,7 @@ namespace Auction.mod
     class Messageparser
     {
 
-        private List<Auction> addingcards = new List<Auction>();
+        //private List<Auction> addingcards = new List<Auction>();
 
 
 
@@ -70,7 +70,7 @@ namespace Auction.mod
         }
 
 
-        private void additemtolist(Card c, string from, int gold, bool wts, string wholemsg)
+        /*private void additemtolist(Card c, string from, int gold, bool wts, string wholemsg)
         {
             
             if (wts)
@@ -83,44 +83,10 @@ namespace Auction.mod
                 this.addingcards.Add(new Auction(from, DateTime.Now, Auction.OfferType.BUY, c, wholemsg, gold));
             }
 
-        }
+        }*/
 
-        private void getaucitemsformshortmsg(string msg, string from, string room)
-        {
-
-
-            bool aucbtoo = false;
-            bool wts = true;
-            string secmsg = "";
-            if (msg.StartsWith("aucs "))
-            {
-                wts = true;
-                msg = msg.Remove(0, 5);
-                if (msg.Contains("aucb "))
-                {
-                    aucbtoo = true;
-                    secmsg = (msg.Split(new string[] { "aucb " }, StringSplitOptions.None))[1];
-                    msg = (msg.Split(new string[] { "aucb " }, StringSplitOptions.None))[0];
-                }
-            }
-            if (msg.StartsWith("aucb "))
-            {
-                wts = false;
-                msg = msg.Remove(0, 5);
-
-
-                if (msg.Contains("aucs "))
-                {
-                    wts = true;
-                    aucbtoo = true;
-                    secmsg = (msg.Split(new string[] { "aucs " }, StringSplitOptions.None))[0];
-                    msg = (msg.Split(new string[] { "aucs " }, StringSplitOptions.None))[1];
-                }
-
-            }
-            //Console.WriteLine(msg + "##" + secmsg);
-
-            string[] words = msg.Split(';');
+        private void GetAuctionsFromShortIntoList(string shortList, string from, Auction.OfferType offerType, List<Auction> outList) {
+            string[] words = shortList.Split(';');
             for (int i = 0; i < words.Length; i++)
             {
                 if (words[i] == "" || words[i] == " ") break;
@@ -138,67 +104,49 @@ namespace Auction.mod
                     price = "0";
                     ids = words[i];
                 }
-                if (ids.Contains(","))
-                {
-                    string[] ideen = ids.Split(',');
-                    foreach (string idd in ideen)
-                    {
-                        int id = Convert.ToInt32(idd);
-                        CardType type = CardTypeManager.getInstance().get(id);
-                        Card card = new Card(id, type, true);
-                        additemtolist(card, from, Convert.ToInt32(price), wts, "");
-                    }
 
-                }
-                else
+                string[] ideen = ids.Split(','); //When string does not contain a , the whole string is the first element of the returned array.
+                foreach (string idd in ideen)
                 {
-                    int id = Convert.ToInt32(ids);
+                    int id = Convert.ToInt32(idd);
                     CardType type = CardTypeManager.getInstance().get(id);
                     Card card = new Card(id, type, true);
-                    additemtolist(card, from, Convert.ToInt32(price), wts, "");
-
+                    outList.Add( new Auction(from, DateTime.Now, offerType, card, "(Network Auction)", Convert.ToInt32(price)));
                 }
 
-
-
             }
+        }
+        private List<Auction> GetAuctionsFromShortMessage(string msg, string from, string room)
+        {
 
-            if (aucbtoo)
+            List<Auction> addingcards = new List<Auction>();
+            //bool wts = true;
+            string secmsg = "";
+            if (msg.StartsWith("aucs "))
             {
-                wts = false;
-                words = secmsg.Split(';');
-                for (int i = 0; i < words.Length; i++)
+                //wts = true;
+                msg = msg.Remove(0, 5);
+                if (msg.Contains("aucb "))
                 {
-                    if (words[i] == "" || words[i] == " ") break;
-                    string price = words[i].Split(' ')[1];
-                    if (price == "") { price = "0"; }
-                    string ids = words[i].Split(' ')[0];
-                    if (ids.Contains(","))
-                    {
-                        string[] ideen = ids.Split(',');
-                        foreach (string idd in ideen)
-                        {
-                            int id = Convert.ToInt32(idd);
-                            CardType type = CardTypeManager.getInstance().get(id);
-                            Card card = new Card(id, type, true);
-                            additemtolist(card, from, Convert.ToInt32(price), wts, "");
-                        }
-
-                    }
-                    else
-                    {
-                        int id = Convert.ToInt32(ids);
-                        CardType type = CardTypeManager.getInstance().get(id);
-                        Card card = new Card(id, type, true);
-                        additemtolist(card, from, Convert.ToInt32(price), wts, "");
-
-                    }
-
+                    secmsg = (msg.Split(new string[] { "aucb " }, StringSplitOptions.None))[1];
+                    msg = (msg.Split(new string[] { "aucb " }, StringSplitOptions.None))[0];
+                    GetAuctionsFromShortIntoList(secmsg, from, Auction.OfferType.BUY, addingcards);
                 }
+                GetAuctionsFromShortIntoList(msg, from, Auction.OfferType.SELL, addingcards);
 
             }
-            // finished parsing, add cards to auctionHouse
-            ah.addAuctions(this.addingcards);
+            if (msg.StartsWith("aucb "))
+            {
+                msg = msg.Remove(0, 5);
+                if (msg.Contains("aucs "))
+                {
+                    secmsg = (msg.Split(new string[] { "aucs " }, StringSplitOptions.None))[1];
+                    msg = (msg.Split(new string[] { "aucs " }, StringSplitOptions.None))[0];
+                    GetAuctionsFromShortIntoList(secmsg, from, Auction.OfferType.SELL, addingcards);
+                }
+                GetAuctionsFromShortIntoList(msg, from, Auction.OfferType.BUY, addingcards);
+            }
+            return addingcards;
         }
 
         public void getaucitemsformmsg(string msgg, string from, string room)
