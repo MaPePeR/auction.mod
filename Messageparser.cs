@@ -63,22 +63,6 @@ namespace Auction.mod
             return result;
         }
 
-
-        /*private void additemtolist(Card c, string from, int gold, bool wts, string wholemsg)
-        {
-            
-            if (wts)
-            {
-                this.addingcards.Add(new Auction(from, DateTime.Now, Auction.OfferType.SELL, c, wholemsg, gold));   
-            }
-            else
-            {
-
-                this.addingcards.Add(new Auction(from, DateTime.Now, Auction.OfferType.BUY, c, wholemsg, gold));
-            }
-
-        }*/
-
         private static void GetAuctionsFromShortIntoList(string shortList, string from, Auction.OfferType offerType, List<Auction> outList) {
             string[] words = shortList.Split(';');
             for (int i = 0; i < words.Length; i++)
